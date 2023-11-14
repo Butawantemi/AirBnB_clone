@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-"""Class FileStorage that serializes instances to a JSON file
-and deserializes JSON file to instances"""
+"""File Storage Class"""
+
 
 import json
 from models.base_model import BaseModel
@@ -8,24 +8,22 @@ from models.user import User
 
 
 class FileStorage:
-    """Our beautiful class"""
+    """This class provides a file storage module."""
 
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """Returns the dictionary __objects"""
-        return FileStorage.__objects
+        """Returns the dictionary of all objects."""
+        return self.__objects
 
     def new(self, obj):
-        """Sets in __objects the obj with key <obj class name>.id"""
+        """Adds a new object to the dictionary of objects."""
         key = obj.__class__.__name__ + "." + obj.id
         FileStorage.__objects.update({key: obj})
 
     def save(self):
-        """Serializes __objects to the JSON file (path: __file_path).
-        __objects is a dictionary in the form key:object and we need
-        a dictionary in the form key:dict before serializing with JSON"""
+        """Serializes the objects dictionary to a JSON file."""
         my_dict = {}
         for key, value in FileStorage.__objects.items():
             my_dict[key] = value.to_dict()
@@ -34,10 +32,7 @@ class FileStorage:
             json.dump(my_dict, myfile)
 
     def reload(self):
-        """Deserializes the JSON file to __objects
-         (only if the JSON file (__file_path)
-        exists, otherwise, do nothing. The file contains a dictionary
-        in the form key:dict and we need a dictionary in the form key:object"""
+        """Deserializes the JSON file and updates the objects dictionary."""
         try:
             with open(FileStorage.__file_path, "r") as myfile:
                 a_dict = json.load(myfile)
